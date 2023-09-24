@@ -3,66 +3,34 @@ var game;
 var gameContext;
 
 // Bools
-var gameOver = false;
+var gameOver;
 
 // Sizes
 var blockSize = 45;
 var gameSize = 15;
-var X = Math.floor(gameSize / 4) * blockSize;
-var Y = Math.floor(gameSize / 2) * blockSize;
+var X;
+var Y;
 
 // Food
 var fX;
 var fY;
 
 // Snake
-var body = [];
-var moveX = 0;
-var moveY = 0;
-var lastX = 0;
-var lastY = 0;
+var body;
+var moveX;
+var moveY;
+var lastX;
+var lastY;
 
 var lastInterval;
 
 // Window loads
 window.onload = function() {
-    startGame()
+    createEvents();
+    startGame();
 }
 
-// Starting game
-function startGame() {
-    game = null;
-    gameContext = null;
-
-    // Bools
-    gameOver = false;
-
-    // Sizes
-    blockSize = 45;
-    gameSize = 15;
-    X = Math.floor(gameSize / 4) * blockSize;
-    Y = Math.floor(gameSize / 2) * blockSize;
-
-    // Food
-    fX = null;
-    fY = null;
-
-    // Snake
-    body = [];
-    moveX = 0;
-    moveY = 0;
-    lastX = 0;
-    lastY = 0;
-
-    lastInterval = null;
-
-    game = document.getElementById("game");
-    gameContext = game.getContext("2d");
-
-    game.height = gameSize * blockSize;
-    game.width = gameSize * blockSize;
-    game.style = "border:5px solid #000000;"
-
+function createEvents() {
     document.addEventListener("keydown", (e) => {
         if (e.code == "ArrowUp" && moveY != 1 && lastY != 1)
         {
@@ -89,6 +57,44 @@ function startGame() {
         }
     })
 
+    document.getElementById("restartBtn").onclick = () => {
+        startGame()
+    }
+}
+
+// Starting game
+function startGame() {
+    if (lastInterval) clearInterval(lastInterval);
+
+    // Bools
+    gameOver = false;
+
+    // Sizes
+    X = Math.floor(gameSize / 4) * blockSize;
+    Y = Math.floor(gameSize / 2) * blockSize;
+
+    // Food
+    fX = null;
+    fY = null;
+
+    // Snake
+    body = [];
+    moveX = 0;
+    moveY = 0;
+    lastX = 0;
+    lastY = 0;
+
+    lastInterval = null;
+
+    game = document.getElementById("game");
+    gameContext = game.getContext("2d");
+
+    game.height = gameSize * blockSize;
+    game.width = gameSize * blockSize;
+    game.style = "border:5px solid #000000;"
+
+    createEvents();
+
     makeFood();
     lastInterval = setInterval(updateGame, 100);
 }
@@ -98,7 +104,6 @@ function updateGame() {
     if (gameOver)
     {
         clearInterval(lastInterval);
-        startGame();
         return;
     }
     gameContext.strokeStyle = "black";
@@ -160,14 +165,14 @@ function updateGame() {
     if (X < 0 || X > (gameSize * blockSize) - 1 || Y < 0 || Y > (gameSize * blockSize) - 1)
     {
         gameOver = true;
-        alert("Game Over - Hit edge\nPress 'OK' to restart");
+        alert("Game Over - Hit edge");
     }
 
     for (let i = 0; i < body.length; i++) {
         if (X == body[i][0] && Y == body[i][1]) {
             // Snake eats own body
             gameOver = true;
-            alert("Game Over - Hit yourself\nPress 'OK' to restart");
+            alert("Game Over - Hit yourself");
         }
     }
 }

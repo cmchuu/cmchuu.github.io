@@ -87,12 +87,12 @@ class Cell {
 }
 
 window.onload = function() {
-    gameT = document.getElementById("game");
-    createListener();
+    gameT = document.getElementById("minesweeperTable");
+    createEvents();
     startGame();
 }
 
-function createListener() {
+function createEvents() {
     gameT.addEventListener("click", (e) => {
         if (winner || hitBomb) return;
         var clickedElement = e.target.tagName.toLowerCase() === "img" ? e.target.parentElement : e.target;
@@ -120,6 +120,10 @@ function createListener() {
             createVisual();
         }
     })
+
+    document.getElementById("restartBtn").onclick = () => {
+        startGame()
+    }
 }
 
 function startGame() {
@@ -199,6 +203,18 @@ function buildCells() {
             cell.getBombs();
         });
     })
+    
+    var starter = false;
+
+    game.forEach((array) => {
+        array.forEach((cell) => {
+            if (!starter && !cell.bombs && !cell.bomb)
+            {
+                cell.reveal();
+                starter = true;
+            }
+        });
+    });
 }
 
 function createVisual() {
@@ -250,13 +266,13 @@ function createVisual() {
         })
 
         setTimeout(() => {
-            alert("Game Over - Hit bomb\nPress 'OK' to restart");
+            alert("Game Over - Hit bomb");
         }, 100);
     }
     else if (winner)
     {
         setTimeout(() => {
-            alert("You win!\nPress 'OK' to restart")
+            alert("You win!");
         }, 100);
     }
 }
