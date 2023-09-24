@@ -43,7 +43,6 @@ class Cell {
         var adj = [];
         var lastRow = game.length - 1;
         var lastColumn = game[0].length - 1;
-        console.log("row:"+this.row+" column:"+this.column);
         if (this.row > 0 && this.column > 0) adj.push(game[this.row - 1][this.column - 1]);
         if (this.row > 0) adj.push(game[this.row - 1][this.column]);
         if (this.row > 0 && this.column < lastColumn) adj.push(game[this.row - 1][this.column + 1]);
@@ -78,7 +77,6 @@ class Cell {
         if (this.bombs == 0)
         {
             var cells = this.getAdj();
-            console.log(cells.length)
             cells.forEach((cell) => {
                 if (!cell.revealed) cell.reveal();
             });
@@ -105,7 +103,7 @@ function createListener() {
             var column = parseInt(clickedElement.dataset.column);
             var cell = game[row][column];
 
-            if (e.shiftKey && !cell.revealed && totalBombs > 0)
+            if (e.ctrlKey && !cell.revealed && totalBombs > 0)
             {
                 totalBombs += cell.flag() ? -1 : 1;
             }
@@ -125,6 +123,12 @@ function createListener() {
 }
 
 function startGame() {
+    totalBombs = 38;
+
+    // States
+    winner = false;
+    hitBomb = false;
+
     buildTable();
     game = buildArrays();
     buildCells();
@@ -218,7 +222,6 @@ function createVisual() {
             }
             else if (cell.bombs)
             {
-                console.log("theres a bomb near this one")
                 td.className = "revealed";
                 td.style.color = colours[cell.bombs];
                 td.textContent = cell.bombs;
@@ -236,8 +239,6 @@ function createVisual() {
 
     if (hitBomb)
     {
-        alert("Game Over - Hit bomb\nPress 'OK' to restart");
-
         game.forEach((array) => {
             array.forEach((cell) => {
                 if (!cell.bomb && cell.flagged)
@@ -247,9 +248,15 @@ function createVisual() {
                 }
             })
         })
+
+        setTimeout(() => {
+            alert("Game Over - Hit bomb\nPress 'OK' to restart");
+        }, 100);
     }
     else if (winner)
     {
-        alert("You win!\nPress 'OK' to restart")
+        setTimeout(() => {
+            alert("You win!\nPress 'OK' to restart")
+        }, 100);
     }
 }
