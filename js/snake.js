@@ -8,8 +8,8 @@ var gameOver = false;
 // Sizes
 var blockSize = 45;
 var gameSize = 15;
-var X = blockSize * 5;
-var Y = blockSize * 5;
+var X = Math.floor(gameSize / 4) * blockSize;
+var Y = Math.floor(gameSize / 2) * blockSize;
 
 // Food
 var fX;
@@ -22,14 +22,40 @@ var moveY = 0;
 var lastX = 0;
 var lastY = 0;
 
+var lastInterval;
+
 // Window loads
-window.onload = function () {
+window.onload = function() {
     startGame()
 }
 
 // Starting game
-function startGame()
-{
+function startGame() {
+    game = null;
+    gameContext = null;
+
+    // Bools
+    gameOver = false;
+
+    // Sizes
+    blockSize = 45;
+    gameSize = 15;
+    X = Math.floor(gameSize / 4) * blockSize;
+    Y = Math.floor(gameSize / 2) * blockSize;
+
+    // Food
+    fX = null;
+    fY = null;
+
+    // Snake
+    body = [];
+    moveX = 0;
+    moveY = 0;
+    lastX = 0;
+    lastY = 0;
+
+    lastInterval = null;
+
     game = document.getElementById("game");
     gameContext = game.getContext("2d");
 
@@ -64,25 +90,26 @@ function startGame()
     })
 
     makeFood();
-    setInterval(updateGame, 100);
+    lastInterval = setInterval(updateGame, 100);
 }
 
 // Updating game
-function updateGame()
-{
+function updateGame() {
+    if (gameOver)
+    {
+        clearInterval(lastInterval);
+        startGame();
+        return;
+    }
     gameContext.strokeStyle = "black";
     gameContext.lineWidth = 1;
-
-    if (gameOver) { return; }
     
     //gameContext.fillStyle = "green";
     var light = true;
     for (let r = 0; r < gameSize * blockSize; r = r + blockSize)
     {
-        console.log("r = " + r)
         for (let c = 0; c < gameSize * blockSize; c = c + blockSize)
         {
-            console.log("c = " + c)
             if (light)
             {
                 gameContext.fillStyle = "#aad751" // Light square
@@ -118,12 +145,12 @@ function updateGame()
     gameContext.fillStyle = "#1e49a1"; // Darker blue head
     X += moveX * blockSize;
     Y += moveY * blockSize;
-    lastX = moveX
-    lastY = moveY
+    lastX = moveX;
+    lastY = moveY;
     gameContext.fillRect(X, Y, blockSize, blockSize);
     //gameContext.strokeRect(X, Y, blockSize, blockSize);
 
-    gameContext.fillStyle = "#426fe3" // Lighter blue body
+    gameContext.fillStyle = "#426fe3"; // Lighter blue body
     for (let i = 0; i < body.length; i++)
     {
         gameContext.fillRect(body[i][0], body[i][1], blockSize, blockSize);
@@ -133,22 +160,20 @@ function updateGame()
     if (X < 0 || X > (gameSize * blockSize) - 1 || Y < 0 || Y > (gameSize * blockSize) - 1)
     {
         gameOver = true;
-        alert("Game Over - Hit Edge");
+        alert("Game Over - Hit edge\nPress 'OK' to restart");
     }
 
     for (let i = 0; i < body.length; i++) {
         if (X == body[i][0] && Y == body[i][1]) {
-             
             // Snake eats own body
             gameOver = true;
-            alert("Game Over - Hit Yourself");
+            alert("Game Over - Hit yourself\nPress 'OK' to restart");
         }
     }
 }
 
 // Making food
-function makeFood()
-{
+function makeFood() {
     var inSnake = true;
     while (inSnake)
     {
