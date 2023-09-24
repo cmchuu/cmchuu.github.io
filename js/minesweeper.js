@@ -243,7 +243,7 @@ function createVisual() {
             array.forEach((cell) => {
                 if (!cell.bomb && cell.flagged)
                 {
-                    var td = document.querySelector(`[data-row="${cell.row}"][data-col="${cell.column}"]`);
+                    var td = document.querySelector(`[data-row="${cell.row}"][data-column="${cell.column}"]`);
                     td.innerHTML = wrongBombImage;
                 }
             })
