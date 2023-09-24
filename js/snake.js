@@ -6,7 +6,7 @@ var gameContext;
 var gameOver;
 
 // Sizes
-var blockSize = 45;
+var blockSize = 30;
 var gameSize = 15;
 var X;
 var Y;
