@@ -10,7 +10,7 @@ var wrongBombImage = "<img src=\"images/wrong-bomb.png\">";
 // Sizes
 var blockSize = 32;
 var gameSize = 15;
-var totalBombs = 38;
+var totalBombs = Math.floor(0.15 * (gameSize * gameSize));
 
 // States
 var winner = false;
@@ -127,8 +127,6 @@ function createEvents() {
 }
 
 function startGame() {
-    totalBombs = 38;
-
     // States
     winner = false;
     hitBomb = false;
@@ -162,7 +160,7 @@ function checkWin() {
 
 function buildTable() {
     gameT.innerHTML = `<tr>${"<td class=\"cell\"></td>".repeat(gameSize)}</tr>`.repeat(gameSize);
-    gameT.style.width = "420px";
+    gameT.style.width = (gameSize * blockSize).toString + "px";
     var cells = Array.from(document.querySelectorAll("td"));
     cells.forEach(function(cell, index) {
         cell.setAttribute("data-row", Math.floor(index / gameSize));
