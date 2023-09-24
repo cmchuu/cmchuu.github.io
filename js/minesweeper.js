@@ -71,7 +71,7 @@ class Cell {
     }
 
     reveal() {
-        if (this.revealed && !hitBomb) return;
+        if ((this.revealed && !hitBomb) || this.flagged) return;
         this.revealed = true;
         if (this.bomb) return true;
         if (this.bombs == 0)
@@ -243,7 +243,7 @@ function createVisual() {
             array.forEach((cell) => {
                 if (!cell.bomb && cell.flagged)
                 {
-                    var td = document.querySelector(`[data-row="${cell.row}"][data-col="${cell.column}"]`)
+                    var td = document.querySelector(`[data-row="${cell.row}"][data-col="${cell.column}"]`);
                     td.innerHTML = wrongBombImage;
                 }
             })
